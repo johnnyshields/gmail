@@ -5,15 +5,15 @@ module GmailImapExtensions
   def self.patch_net_imap_response_parser(klass = Net::IMAP::ResponseParser)
     klass.class_eval do
       def msg_att
-        match(T_LPAR)
+        match(:LPAR)
         attr = {}
         while true
           token = lookahead
           case token.symbol
-          when T_RPAR
+          when :RPAR
             shift_token
             break
-          when T_SPACE
+          when :SPACE
             shift_token
             token = lookahead
           end
