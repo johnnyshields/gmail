@@ -63,6 +63,12 @@ describe "Gmail client (Plain)" do
       client.connect.should be_true
       client.login.should be_false
     end
+
+    it "shouldn't login when given GMail account is invalid" do
+      client = Gmail::Client::Plain.new("foo", "bar")
+      client.connect.should be_true
+      client.login.should be_false
+    end
     
     it "should properly logout from GMail" do 
       client = mock_client
