@@ -1,12 +1,12 @@
-# Taken from https://github.com/oxos/gmail-oauth-thread-stats/blob/master/gmail_imap_extensions_compatibility.rb
-
 module GmailImapExtensions
 
+  # Taken from https://github.com/oxos/gmail-oauth-thread-stats/blob/master/gmail_imap_extensions_compatibility.rb
   def self.patch_net_imap_response_parser(klass = Net::IMAP::ResponseParser)
 
     # https://github.com/ruby/ruby/blob/4d426fc2e03078d583d5d573d4863415c3e3eb8d/lib/net/imap.rb#L2258
+    args = Net::IMAP::ResponseParser.instance_method(:msg_att).arity == 1 ? [:n] : []
     klass.class_eval do
-      def msg_att(*n)
+      define_method :msg_att do |*args|
         match(Net::IMAP::ResponseParser::T_LPAR)
         attr = {}
         while true
@@ -17,7 +17,7 @@ module GmailImapExtensions
               break
             when Net::IMAP::ResponseParser::T_SPACE
               shift_token
-              token = lookahead
+              next
           end
           case token.value
             when /\A(?:ENVELOPE)\z/ni
@@ -35,14 +35,16 @@ module GmailImapExtensions
             when /\A(?:UID)\z/ni
               name, val = uid_data
 
-            # Gmail extension additions.
-            # Cargo-Cult code warning: # I have no idea why the regexp - just copying a pattern
+            # Gmail extension
+            # Cargo-cult code warning: no idea why the regexp works - just copying a pattern
             when /\A(?:X-GM-LABELS)\z/ni
               name, val = flags_data
             when /\A(?:X-GM-MSGID)\z/ni
               name, val = uid_data
             when /\A(?:X-GM-THRID)\z/ni
               name, val = uid_data
+            # End Gmail extension
+
             else
               parse_error("unknown attribute `%s' for {%d}", token.value, n)
           end
