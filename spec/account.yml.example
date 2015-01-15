@@ -1,2 +1,6 @@
-- "test@gmail.com"
-- "test"
+plain:
+  - "ki0zvkyi1yzgy7xu4f4dh46nqrcecm@gmail.com"
+  - "8n4cjsv5jir7eaoj7ra9486k6abmnx83"
+xoauth2:
+  - "ki0zvkyi1yzgy7xu4f4dh46nqrcecm@gmail.com"
+  - "8n4cjsv5jir7eaoj7ra9486k6abmnx83"

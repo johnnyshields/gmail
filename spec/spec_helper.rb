@@ -10,7 +10,7 @@ RSpec.configure do |config|
 end
 
 def within_gmail(&block)
-  gmail = Gmail.connect!(*TEST_ACCOUNT)
+  gmail = Gmail.connect!(*TEST_ACCOUNT["plain"])
   yield(gmail)
   gmail.logout if gmail
 end
